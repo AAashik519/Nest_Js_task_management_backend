@@ -7,6 +7,7 @@ import { Connection } from 'mongoose';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { TasksModule } from './tasks/tasks.module';
+import { UploadModule } from './upload/upload.module';
 
 const logger = new Logger('Database');
 
@@ -57,8 +58,14 @@ const getConnectionLabel = (connection: Connection): string => {
     UsersModule,
 
     TasksModule,
+
+    UploadModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule {
+  constructor() {
+    Logger.log(`API KEY: ${process.env.CLOUD_API_KEY}`, 'ENV CHECK');
+  }
+}
