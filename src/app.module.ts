@@ -18,7 +18,7 @@ const getConnectionLabel = (connection: Connection): string => {
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-        envFilePath: '.env',
+      envFilePath: '.env',
     }),
 
     MongooseModule.forRootAsync({
@@ -28,11 +28,15 @@ const getConnectionLabel = (connection: Connection): string => {
         uri: configService.get<string>('MONGO_URI'),
         connectionFactory: (connection: Connection) => {
           if (connection.readyState === 1) {
-            logger.log(`Database connected successfully: ${getConnectionLabel(connection)}`);
+            logger.log(
+              `Database connected successfully: ${getConnectionLabel(connection)}`,
+            );
           }
 
           connection.on('open', () => {
-            logger.log(`Database connected successfully: ${getConnectionLabel(connection)}`);
+            logger.log(
+              `Database connected successfully: ${getConnectionLabel(connection)}`,
+            );
           });
 
           connection.on('connected', () => {
@@ -53,9 +57,7 @@ const getConnectionLabel = (connection: Connection): string => {
     }),
 
     AuthModule,
-
     UsersModule,
-
     TasksModule,
   ],
   controllers: [AppController],
