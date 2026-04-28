@@ -3,7 +3,7 @@
 export class CreatreUserDto {
     email!: string;
     password!: string;
-     number?: string;
-  image?: string;
+    number?: string;
+    image?: string;
  
 }

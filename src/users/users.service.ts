@@ -1,9 +1,12 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schemas/user.schema';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { CreatreUserDto } from './dto/user-dto';
+import cloudinary from 'src/config/cloudinary.config';
+import { uploadToCloudinary } from 'src/utils/cloudinary/cloudinary.utils';
 
 @Injectable()
 export class UsersService {
@@ -77,4 +80,32 @@ export class UsersService {
       user: user,
     };
   }
+
+  async updateProfile(userId: string, dto: CreatreUserDto, file?: Express.Multer.File) {
+    const user = await this.userModel.findById(userId);
+
+    if (!user) {
+      throw new NotFoundException('User Not found');
+    }
+
+    if (file) {
+      const result = await uploadToCloudinary(file)
+      dto.image = result.secure_url;
+    }
+    
+    const { password, ...updateData } = dto;
+    
+
+    Object.assign(user, updateData);
+    await user.save();
+
+    const { password: _, ...result } = user.toObject();
+
+    return {
+      message: 'Profile update Successfully',
+      user:result,
+    };
+  }
+    
+ 
 }
