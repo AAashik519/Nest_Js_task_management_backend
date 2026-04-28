@@ -1,9 +1,7 @@
-
-
 export class CreatreUserDto {
-    email!: string;
-    password!: string;
-    number?: string;
-    image?: string;
- 
+  email!: string;
+  password!: string;
+  number?: string;
+  image?: string;
+  date?: Date;
 }
