@@ -33,3 +33,17 @@ export class CreateTaskDto {
   @IsString()
   userImage?: string;
 }
+
+export class UpdateAssignedTaskDto {
+  @IsOptional()
+  @IsEnum(TaskStatus)
+  status?: TaskStatus;
+
+  @IsOptional()
+  @IsString()
+  userDescription?: string;
+
+  @IsOptional()
+  @IsString()
+  userImage?: string;
+}

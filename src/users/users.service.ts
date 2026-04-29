@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schemas/user.schema';
 import { Model } from 'mongoose';
@@ -56,7 +61,7 @@ export class UsersService {
     const payload = {
       sub: user._id,
       email: user.email,
-      role:user.role
+      role: user.role,
     };
 
     const token = this.jwtService.sign(payload);
@@ -82,7 +87,11 @@ export class UsersService {
     };
   }
 
-  async updateProfile(userId: string, dto: CreatreUserDto, file?: Express.Multer.File) {
+  async updateProfile(
+    userId: string,
+    dto: CreatreUserDto,
+    file?: Express.Multer.File,
+  ) {
     const user = await this.userModel.findById(userId);
 
     if (!user) {
@@ -90,12 +99,11 @@ export class UsersService {
     }
 
     if (file) {
-      const result = await uploadToCloudinary(file)
+      const result = await uploadToCloudinary(file);
       dto.image = result.secure_url;
     }
-    
+
     const { password, ...updateData } = dto;
-    
 
     Object.assign(user, updateData);
     await user.save();
@@ -104,9 +112,10 @@ export class UsersService {
 
     return {
       message: 'Profile update Successfully',
-      user:result,
+      user: result,
     };
   }
-    
- 
+
+  //  User Task Service Handler
+
 }
