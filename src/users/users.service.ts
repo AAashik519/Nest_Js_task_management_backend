@@ -9,7 +9,7 @@ import { User } from './schemas/user.schema';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { CreatreUserDto } from './dto/user-dto';
+import { CreateUserDto, UpdateProfileDto } from './dto/user-dto';
 import cloudinary from 'src/config/cloudinary.config';
 import { uploadToCloudinary } from 'src/utils/cloudinary/cloudinary.utils';
 
@@ -89,7 +89,7 @@ export class UsersService {
 
   async updateProfile(
     userId: string,
-    dto: CreatreUserDto,
+    dto: UpdateProfileDto,
     file?: Express.Multer.File,
   ) {
     const user = await this.userModel.findById(userId);
@@ -103,9 +103,7 @@ export class UsersService {
       dto.image = result.secure_url;
     }
 
-    const { password, ...updateData } = dto;
-
-    Object.assign(user, updateData);
+    Object.assign(user, dto);
     await user.save();
 
     const { password: _, ...result } = user.toObject();
