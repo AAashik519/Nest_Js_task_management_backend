@@ -164,7 +164,55 @@ export class TasksService {
       throw new InternalServerErrorException('Task update failed');
     }
   }
-//assign user specific task updated
+
+
+  async deleteTaskById(id: string) {
+    try {
+      if (!Types.ObjectId.isValid(id)) {
+        throw new BadRequestException('Invalid task id');
+      }
+      const task = await this.taskModel.findByIdAndDelete(id);
+      if (!task) {
+        throw new NotFoundException('Task not found');
+      }
+
+      return {
+        success: true,
+        message: 'Task deleted successfully',
+      };
+    } catch (error) {
+      if (
+        error instanceof NotFoundException ||
+        error instanceof BadRequestException
+      ) {
+        throw error;
+      }
+    }
+  }
+
+  //users Assign Task
+
+  async getMyTasks(userId: string) {
+    try {
+      const task = await this.taskModel.find({ assignTo: userId });
+      if (!task.length) {
+        throw new BadRequestException('Task is not found');
+      }
+      return {
+        success: true,
+        message: 'Task fetch successfully',
+        data: task,
+      };
+    } catch (error) {
+      if (error instanceof BadRequestException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Failed to fetch assigned tasks');
+    }
+  }
+
+
+  //assign user specific task updated
   async updateAssignedTaskById(
     userId: string,
     id: string,
@@ -221,51 +269,6 @@ export class TasksService {
         throw error;
       }
       throw new InternalServerErrorException('Assigned task update failed');
-    }
-  }
-
-  async deleteTaskById(id: string) {
-    try {
-      if (!Types.ObjectId.isValid(id)) {
-        throw new BadRequestException('Invalid task id');
-      }
-      const task = await this.taskModel.findByIdAndDelete(id);
-      if (!task) {
-        throw new NotFoundException('Task not found');
-      }
-
-      return {
-        success: true,
-        message: 'Task deleted successfully',
-      };
-    } catch (error) {
-      if (
-        error instanceof NotFoundException ||
-        error instanceof BadRequestException
-      ) {
-        throw error;
-      }
-    }
-  }
-
-  //users Assign Task
-
-  async getMyTasks(userId: string) {
-    try {
-      const task = await this.taskModel.find({ assignTo: userId });
-      if (!task.length) {
-        throw new BadRequestException('Task is not found');
-      }
-      return {
-        success: true,
-        message: 'Task fetch successfully',
-        data: task,
-      };
-    } catch (error) {
-      if (error instanceof BadRequestException) {
-        throw error;
-      }
-      throw new InternalServerErrorException('Failed to fetch assigned tasks');
     }
   }
 }

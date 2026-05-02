@@ -20,11 +20,19 @@ import { Roles } from 'src/common/guards/roles/roles.decorator';
 import { RoleGuard } from 'src/common/guards/roles/roles.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UpdateAssignedTaskDto } from './dto/task-dto';
-
+import { ApiBearerAuth, ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+@ApiTags('Tasks')
 @Controller('tasks')
 export class TasksController {
   constructor(private readonly taskService: TasksService) {}
 
+  @ApiOperation({ summary: 'Create a new task' })
+  @ApiResponse({ status: 201, description: 'Task created successfully' })
+  @ApiResponse({ status: 400, description: 'Bad Request' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Forbidden' })
+  @ApiBearerAuth()
+  @ApiConsumes('multipart/form-data')
   @Post('/create')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles('admin')
@@ -36,6 +44,11 @@ export class TasksController {
     return this.taskService.createTaskService(dto, file);
   }
 
+  @ApiOperation({ summary: 'Get all tasks' })
+  @ApiResponse({ status: 200, description: 'Tasks retrieved successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Forbidden' })
+  @ApiBearerAuth()
   @Get('all-tasks')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles('admin')
@@ -43,6 +56,12 @@ export class TasksController {
     return this.taskService.getAllTasks(query);
   }
 
+  @ApiOperation({ summary: 'Get a task by ID' })
+  @ApiResponse({ status: 200, description: 'Task retrieved successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Forbidden' })
+  @ApiResponse({ status: 404, description: 'Task not found' })
+  @ApiBearerAuth()
   @Get('task/:id')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles('admin')
@@ -50,6 +69,14 @@ export class TasksController {
     return this.taskService.getTaskByID(id);
   }
 
+  @ApiOperation({ summary: 'Update a task by ID' })
+  @ApiResponse({ status: 200, description: 'Task updated successfully' })
+  @ApiResponse({ status: 400, description: 'Bad Request' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Forbidden' })
+  @ApiResponse({ status: 404, description: 'Task not found' })
+  @ApiBearerAuth()
+  @ApiConsumes('multipart/form-data')
   @Patch('task/:id')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles('admin')
@@ -61,7 +88,6 @@ export class TasksController {
   ) {
     return this.taskService.getTaskAndUpdateById(id, dto, file);
   }
-
   @Patch('my-task/:id')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('file'))
@@ -79,6 +105,12 @@ export class TasksController {
     );
   }
 
+  @ApiOperation({ summary: 'Delete a task by ID' })
+  @ApiResponse({ status: 200, description: 'Task deleted successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Forbidden' })
+  @ApiResponse({ status: 404, description: 'Task not found' })
+  @ApiBearerAuth()
   @Delete('task/:id')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles('admin')
