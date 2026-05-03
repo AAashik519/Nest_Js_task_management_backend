@@ -97,12 +97,7 @@ export class TasksController {
     @Body() dto: UpdateAssignedTaskDto,
     @UploadedFile() file?: Express.Multer.File,
   ) {
-    return this.taskService.updateAssignedTaskById(
-      req.user.sub,
-      id,
-      dto,
-      file,
-    );
+    return this.taskService.updateAssignedTaskById(req.user.sub, id, dto, file);
   }
 
   @ApiOperation({ summary: 'Delete a task by ID' })
@@ -118,12 +113,9 @@ export class TasksController {
     return this.taskService.deleteTaskById(id);
   }
 
-
-
-
-  @Get("my-task")
+  @Get('my-task')
   @UseGuards(JwtAuthGuard)
-  getMytasks(@Req() req){ 
-    return this.taskService.getMyTasks(req.user.sub)
+  getMytasks(@Req() req) {
+    return this.taskService.getMyTasks(req.user.sub);
   }
 }
