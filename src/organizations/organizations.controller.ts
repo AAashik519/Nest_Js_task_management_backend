@@ -14,6 +14,7 @@ import {
   ApiConsumes,
   ApiOperation,
   ApiResponse,
+  ApiTags,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth/jwt-auth.guard';
 import { RoleGuard } from 'src/common/guards/roles/roles.guard';
@@ -21,6 +22,9 @@ import { Roles } from 'src/common/guards/roles/roles.decorator';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateOrganizationDto } from './dto/organization.dto';
 
+@ApiTags('Organizations')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @Controller('organizations')
 export class OrganizationsController {
   constructor(private readonly organizationService: OrganizationsService) {}
@@ -33,19 +37,16 @@ export class OrganizationsController {
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiBearerAuth()
   @ApiConsumes('multipart/form-data')
   @Post('/create')
-  @UseGuards(JwtAuthGuard)
-   
   @UseInterceptors(FileInterceptor('image'))
   createOrganization(
     @Body() dto: CreateOrganizationDto,
     @Req() req,
     @UploadedFile() file?: Express.Multer.File,
   ) {
-    console.log('Full req.user:', req.user);
+    // console.log('Full req.user:', req.user);
     const userId = req.user.sub;
-    return this.organizationService.createOrganization(dto,userId, file);
+    return this.organizationService.createOrganization(dto, userId, file);
   }
 }

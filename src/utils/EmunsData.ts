@@ -5,3 +5,10 @@ export enum TaskStatus {
   REVIEW = 'review',
   SUBMIT = 'submit',
 }
+
+
+export enum OrgRole {
+  OWNER = 'OWNER',
+  ADMIN = 'ADMIN',
+  MEMBER = 'MEMBER',
+}

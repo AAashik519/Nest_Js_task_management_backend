@@ -11,11 +11,11 @@ export class Organization {
   @IsString()
   name!: string;
 
-  @Prop({required: false})
+  @Prop({ required: false, type: String })
   @IsString()
   description?: string;
 
-  @Prop({ required: true })
+  @Prop({ required: false, type: String })
   image!: string;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true })

@@ -1,5 +1,12 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, IsOptional } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsString,
+  IsOptional,
+  IsMongoId,
+  min,
+  MinLength,
+} from 'class-validator';
 
 export class CreateOrganizationDto {
   @ApiProperty({
@@ -21,8 +28,56 @@ export class CreateOrganizationDto {
   @ApiPropertyOptional({
     type: 'string',
     format: 'binary',
-    description: 'The image file for the organization (upload as file, not form field)',
+    description:
+      'The image file for the organization (upload as file, not form field)',
   })
   @IsOptional()
   image?: string;
+}
+
+export class UpdateOrganizationDto {
+  @ApiPropertyOptional({ description: 'The title of the organization' })
+  @IsString()
+  @IsOptional()
+  @MinLength(2)
+  name?: string;
+
+  @ApiPropertyOptional({ description: 'The description of the organization' })
+  @IsString()
+  @IsOptional()
+  @MinLength(5)
+  description?: string;
+
+  @ApiPropertyOptional({
+    type: 'string',
+    format: 'binary',
+    description:
+      'The new image file for the organization (upload as file, not form field)',
+  })
+  @IsOptional()
+  image?: string;
+}
+
+export class CreateOrgMemberDto {
+  @ApiProperty({
+    example: '60d0fe4f5311236168a109ca',
+    description: 'The ID of the user to be added as a member',
+  })
+  @IsMongoId()
+  userId!: string;
+
+  @ApiProperty({
+    example: '60d0fe4f5311236168a109ca',
+    description: 'The ID of the organization to which the user will be added',
+  })
+  @IsMongoId()
+  organizationId!: string;
+
+  @ApiProperty({
+    example: 'MEMBER',
+    description: 'The role of the user in the organization',
+  })
+  @IsString()
+  @IsNotEmpty()
+  role!: string;
 }
