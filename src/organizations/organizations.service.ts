@@ -9,12 +9,14 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Organization } from './schemas/organization.schema';
 import { Model, Types } from 'mongoose';
 import {
+  AddOrganizationMemberDto,
   CreateOrganizationDto,
   UpdateOrganizationDto,
 } from './dto/organization.dto';
 import { uploadToCloudinary } from 'src/utils/cloudinary/cloudinary.utils';
 import { OrganizationMember } from './schemas/organization-member.schema';
 import { OrgRole } from 'src/utils/EmunsData';
+import { User } from 'src/users/schemas/user.schema';
 
 @Injectable()
 export class OrganizationsService {
@@ -24,6 +26,7 @@ export class OrganizationsService {
 
     @InjectModel(OrganizationMember.name)
     private organizationMemberModel: Model<OrganizationMember>,
+    @InjectModel('User') private userModel: Model<User>,
   ) {}
 
   async createOrganization(
@@ -181,7 +184,49 @@ export class OrganizationsService {
   }
 
   async getOrganizationAllMembers(id: string, userId: string) {
-    
+    if (!Types.ObjectId.isValid(id)) {
+      throw new BadRequestException('Invalid organization ID');
+    }
+    if (!Types.ObjectId.isValid(userId)) {
+      throw new BadRequestException('Invalid user ID');
+    }
+
+    const orgMember = await this.organizationMemberModel.find({
+      organizationId: id,
+      userId: userId,
+    });
+
+    if (!orgMember) {
+      throw new NotFoundException(
+        'Organization not found or you are not a member',
+      );
+    }
+
+    return {
+      message: 'Organizations fetched successfully',
+      statusCode: HttpStatus.OK,
+      data: orgMember,
+    };
   }
 
+  // async addOrganizationMember(
+  //   dto: AddOrganizationMemberDto,
+  //   id: string,
+  //   userId: string,
+  // ) {
+  //   if (!Types.ObjectId.isValid(id)) {
+  //     throw new BadRequestException('Invalid Id');
+  //   }
+
+  //   if (!Types.ObjectId.isValid(userId)) {
+  //     throw new NotFoundException('Invalid User Id or you are not a member');
+  //   }
+
+  //   console.log('Adding organization member:', dto);
+
+  //   const checkUser = await this.userModel.findOne({email: dto.email});
+
+  //   console.log(checkUser);
+    
+  // }
 }

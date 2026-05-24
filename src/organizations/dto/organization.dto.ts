@@ -1,12 +1,15 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 import {
   IsNotEmpty,
   IsString,
   IsOptional,
   IsMongoId,
-  min,
+  IsEmail,
+  IsEnum,
   MinLength,
 } from 'class-validator';
+import { OrgRole } from 'src/utils/EmunsData';
 
 export class CreateOrganizationDto {
   @ApiProperty({
@@ -80,4 +83,25 @@ export class CreateOrgMemberDto {
   @IsString()
   @IsNotEmpty()
   role!: string;
+}
+
+export class AddOrganizationMemberDto {
+  @ApiProperty({
+    example: 'member@example.com',
+    description: 'Email of the user to add to this organization',
+  })
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim().toLowerCase() : value))
+  @IsEmail()
+  email!: string;
+
+  @ApiPropertyOptional({
+    enum:OrgRole,
+    example:OrgRole.MEMBER,
+    description:"Role to assign to the user (OWNER is not allowed here)"
+  })
+ 
+  @IsOptional()
+  @IsEnum(OrgRole)
+  role?: OrgRole;
+
 }

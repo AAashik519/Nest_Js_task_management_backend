@@ -24,6 +24,7 @@ import { JwtAuthGuard } from 'src/common/guards/jwt-auth/jwt-auth.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
   CreateOrganizationDto,
+  AddOrganizationMemberDto,
   UpdateOrganizationDto,
 } from './dto/organization.dto';
 
@@ -127,6 +128,7 @@ export class OrganizationsController {
     return this.organizationService.deleteOrganization(id, userId);
   }
 
+
   @ApiOperation({ summary: 'Get All Organizations members' })
   @ApiResponse({
     status: 200,
@@ -146,4 +148,30 @@ export class OrganizationsController {
     }
     return this.organizationService.getOrganizationAllMembers(id, userId);
   }
+
+  // @ApiOperation({ summary: 'Add member to organization' })
+  // @ApiResponse({
+  //   status: 200,
+  //   description: 'Member added to organization successfully',
+  // })
+  // @ApiResponse({ status: 400, description: 'Bad Request' })
+  // @ApiResponse({ status: 401, description: 'Unauthorized' })
+  // @ApiResponse({ status: 403, description: 'Forbidden' })
+  // @ApiResponse({ status: 404, description: 'Organization not found' })
+  // @ApiBearerAuth()
+  // @Post('/:id')
+  // addOrganizationMember(
+  //   @Body() dto: AddOrganizationMemberDto,
+  //   @Req() req: any,
+  //   @Param('id') id: string,
+  // ) {
+  //   const userId = req.user?.sub;
+
+  //   if (!userId) {
+  //     throw new BadRequestException('Missing user id in request');
+  //   }
+
+  //   return this.organizationService.addOrganizationMember(dto, id, userId);
+  // }
 }
+ 
