@@ -9,6 +9,7 @@ import { UsersModule } from './users/users.module';
 import { TasksModule } from './tasks/tasks.module';
 import { UploadModule } from './upload/upload.module';
 import { OrganizationsModule } from './organizations/organizations.module';
+import { TeamsModule } from './teams/teams.module';
 
 const logger = new Logger('Database');
 
@@ -65,6 +66,8 @@ const getConnectionLabel = (connection: Connection): string => {
     UploadModule,
 
     OrganizationsModule,
+
+    TeamsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
