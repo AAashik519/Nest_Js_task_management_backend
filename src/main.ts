@@ -30,7 +30,7 @@ async function bootstrap() {
   // ✅ Correct Swagger path
   SwaggerModule.setup('api/docs', app, document);
 
-  const port = 5050;
+  const port = Number(process.env.PORT) || 5050;
   await app.listen(port);
 
   logger.log(`Application is running on: http://localhost:${port}/api`);

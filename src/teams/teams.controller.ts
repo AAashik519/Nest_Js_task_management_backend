@@ -6,6 +6,7 @@ import {
   Req,
   UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { TeamsService } from './teams.service';
 import {
@@ -16,6 +17,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth/jwt-auth.guard';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateTeamDto } from './dto/teams.dto';
 
 @ApiTags('Teams')
@@ -33,7 +35,8 @@ export class TeamsController {
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiConsumes("multipart/form-data'")
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor('image'))
   @Post('create')
   createTeam(
     @Body() dto: CreateTeamDto,

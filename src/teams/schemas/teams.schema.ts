@@ -17,7 +17,7 @@ export class Team {
     ref: 'Organization',
     required: true,
   })
-  organization!: mongoose.Types.ObjectId;
+  organizationId!: mongoose.Types.ObjectId;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   members!: mongoose.Types.ObjectId[];
