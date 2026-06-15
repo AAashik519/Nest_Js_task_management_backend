@@ -3,6 +3,8 @@ import { TasksController } from './tasks.controller';
 import { TasksService } from './tasks.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Task, TaskSchema } from './schemas/task.schema';
+import { TeamSchema } from 'src/teams/schemas/teams.schema';
+import { TeamMemberSchema } from 'src/teams/schemas/team-member.schems';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
@@ -11,6 +13,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     ConfigModule,
     MongooseModule.forFeature([
       { name: Task.name, schema: TaskSchema },
+      { name: 'Team', schema: TeamSchema },
+      { name: 'TeamMember', schema: TeamMemberSchema },
     ]),
     JwtModule.registerAsync({
       imports: [ConfigModule],

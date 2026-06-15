@@ -22,7 +22,8 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { UpdateAssignedTaskDto } from './dto/task-dto';
 import { ApiBearerAuth, ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 @ApiTags('Tasks')
-@Controller('tasks')
+@Controller('teams')
+@UseGuards(JwtAuthGuard)
 export class TasksController {
   constructor(private readonly taskService: TasksService) {}
 
@@ -33,15 +34,14 @@ export class TasksController {
   @ApiResponse({ status: 403, description: 'Forbidden' })
   @ApiBearerAuth()
   @ApiConsumes('multipart/form-data')
-  @Post('/create')
-  @UseGuards(JwtAuthGuard, RoleGuard)
-  @Roles('admin')
+  @Post('/:teamId/tasks')
   @UseInterceptors(FileInterceptor('image'))
   createTask(
     @Body() dto: CreateTaskDto,
+    @Param('teamId') teamId: string,
     @UploadedFile() file?: Express.Multer.File,
   ) {
-    return this.taskService.createTaskService(dto, file);
+    return this.taskService.createTaskService(dto,teamId,file);
   }
 
   @ApiOperation({ summary: 'Get all tasks' })

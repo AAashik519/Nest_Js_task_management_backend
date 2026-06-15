@@ -209,24 +209,24 @@ export class OrganizationsService {
     };
   }
 
-  // async addOrganizationMember(
-  //   dto: AddOrganizationMemberDto,
-  //   id: string,
-  //   userId: string,
-  // ) {
-  //   if (!Types.ObjectId.isValid(id)) {
-  //     throw new BadRequestException('Invalid Id');
-  //   }
+  async addOrganizationMember(
+    dto: AddOrganizationMemberDto,
+    id: string,
+    userId: string,
+  ) {
+    if (!Types.ObjectId.isValid(id)) {
+      throw new BadRequestException('Invalid Id');
+    }
 
-  //   if (!Types.ObjectId.isValid(userId)) {
-  //     throw new NotFoundException('Invalid User Id or you are not a member');
-  //   }
+    if (!Types.ObjectId.isValid(userId)) {
+      throw new NotFoundException('Invalid User Id or you are not a member');
+    }
 
-  //   console.log('Adding organization member:', dto);
+    console.log('Adding organization member:', dto);
 
-  //   const checkUser = await this.userModel.findOne({email: dto.email});
+    const checkUser = await this.userModel.findOne({email: dto.email});
 
-  //   console.log(checkUser);
+    console.log(checkUser);
     
-  // }
+  }
 }

@@ -16,7 +16,15 @@ export class Task {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   assignTo!: string;
 
-  @Prop({ required: true })
+ 
+
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Team', required: true })
+  teamId!: string;
+
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true })
+  createdBy!: string;
+
+  @Prop()
   deadline!: Date;
 
   @Prop({

@@ -19,7 +19,7 @@ export class TasksService {
     @InjectModel(Task.name) private readonly taskModel: Model<Task>,
   ) {}
 
-  async createTaskService(dto: CreateTaskDto, file?: Express.Multer.File) {
+  async createTaskService(dto: CreateTaskDto,teamId:string, file?: Express.Multer.File) {
     try {
       let imageUrl = dto.image ?? '';
 

@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsMongoId, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { TaskStatus } from 'src/utils/EmunsData';
 
 export class CreateTaskDto {
@@ -32,7 +32,7 @@ export class CreateTaskDto {
     description: 'The user to whom the task is assigned',
   })
   @IsOptional()
-  @IsString()
+  @IsMongoId()
   assignTo?: string;
 
   @ApiPropertyOptional({

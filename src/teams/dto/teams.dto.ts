@@ -1,6 +1,18 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsMongoId, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { Transform } from 'class-transformer';
+import {
+  IsEmail,
+  IsEnum,
+  IsMongoId,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
+
+export enum TeamRole {
+  ADMIN = 'admin',
+  MEMBER = 'member',
+}
 
 export class CreateTeamDto {
   @ApiProperty({
@@ -40,4 +52,54 @@ export class CreateTeamDto {
   @IsMongoId()
   organizationId!: string;
 
+}
+
+
+ export class UpdateTeamDto {
+  @ApiPropertyOptional({
+    example: 'Frontend Team Updated',
+    description: 'Name of team updated',
+  })
+  @IsOptional()
+  @IsString()
+  name?: string;
+  
+  @ApiPropertyOptional({
+    example: 'Team Responsible for frontend Development Updated',
+    description: 'Description of team updated',
+  })
+  @IsOptional()
+  @IsString()
+  description?: string;
+  
+  @ApiPropertyOptional({
+    example: 'https://example.com/team-image.jpg',
+    description: 'Image of team updated',
+  })
+  @IsOptional()
+  @IsString()
+  image?: string;
+ }
+
+
+export class AddTeamMemberDto {
+  @ApiProperty({
+    example : 'member@example.com',
+    description:
+     'The email of the user to add to the team',
+     required:true,
+  })
+  @IsEmail()
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim().toLowerCase() : value))
+  email!: string;
+
+  @ApiPropertyOptional({
+    enum: TeamRole,
+    example: TeamRole.MEMBER,
+    description: 'Role of the user to add to the team',
+  })
+  @IsOptional()
+  @IsEnum(TeamRole)
+  role?: TeamRole;
+ 
 }
